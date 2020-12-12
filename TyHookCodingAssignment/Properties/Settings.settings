@@ -1,0 +1,15 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="TyHookCodingAssignment.Properties" GeneratedClassName="Settings">
+  <Profiles />
+  <Settings>
+    <Setting Name="APIKey" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">D1ymPWHCxpkPOeNIrXZmNjXxZ</Value>
+    </Setting>
+    <Setting Name="APISecret" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">9vQvDwSUDwwPrVIV0xVMfgSntQItuV8M7nKQBgRmCDIvRYljRp</Value>
+    </Setting>
+    <Setting Name="BearerToken" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">AAAAAAAAAAAAAAAAAAAAAOluKQEAAAAAIzRc6a4zvMqFqqpMx5%2FUH3hYhv0%3DkRzPRlz6D8YkzJcsyg1ld2vsOqhMJMBKo2zOumc7Edf6gNaLFY</Value>
+    </Setting>
+  </Settings>
+</SettingsFile>

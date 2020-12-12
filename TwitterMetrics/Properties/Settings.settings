@@ -1,0 +1,21 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="TwitterMetrics.Properties" GeneratedClassName="Settings">
+  <Profiles />
+  <Settings>
+    <Setting Name="APIKey" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">D1ymPWHCxpkPOeNIrXZmNjXxZ</Value>
+    </Setting>
+    <Setting Name="APISecret" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">9vQvDwSUDwwPrVIV0xVMfgSntQItuV8M7nKQBgRmCDIvRYljRp</Value>
+    </Setting>
+    <Setting Name="BearerToken" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">AAAAAAAAAAAAAAAAAAAAAOluKQEAAAAAIzRc6a4zvMqFqqpMx5%2FUH3hYhv0%3DkRzPRlz6D8YkzJcsyg1ld2vsOqhMJMBKo2zOumc7Edf6gNaLFY</Value>
+    </Setting>
+    <Setting Name="Address" Type="System.String" Scope="User">
+      <Value Profile="(Default)">https://api.twitter.com/2/tweets/sample/stream?expansions=attachments.poll_ids,attachments.media_keys,author_id,entities.mentions.username,geo.place_id,in_reply_to_user_id,referenced_tweets.id,referenced_tweets.id.author_id&amp;user.fields=created_at&amp;media.fields=duration_ms,height,media_key,preview_image_url,type,url,width,public_metrics&amp;place.fields=contained_within,country,country_code,full_name,geo,id,name,place_type&amp;poll.fields=duration_minutes,end_datetime,id,options,voting_status&amp;tweet.fields=attachments,author_id,context_annotations,conversation_id,created_at,entities,geo,id,in_reply_to_user_id,lang,public_metrics,possibly_sensitive,referenced_tweets,reply_settings,source,text,withheld</Value>
+    </Setting>
+    <Setting Name="TimeOutMS" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">30000</Value>
+    </Setting>
+  </Settings>
+</SettingsFile>
