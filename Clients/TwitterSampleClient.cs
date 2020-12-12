@@ -41,7 +41,7 @@ namespace TyHookCodingAssignment.Clients
             {
                 //set web request authorization header and pass bearer for access to twitter stream
                 //use get method to get stream
-                WebRequest webRequest = WebRequest.Create("https://api.twitter.com/2/tweets/sample/stream?expansions=attachments.media_keys,entities.mentions.username&user.fields=created_at&media.fields=duration_ms,height,media_key,preview_image_url,type,url,width,public_metrics&place.fields=contained_within,country,country_code,full_name,geo,id,name,place_type&poll.fields=duration_minutes,end_datetime,id,options,voting_status&tweet.fields=attachments,author_id,context_annotations,conversation_id,created_at,entities,geo,id,in_reply_to_user_id,lang,public_metrics,possibly_sensitive,referenced_tweets,reply_settings,source,text,withheld");
+                WebRequest webRequest = WebRequest.Create(address);
                 webRequest.Headers.Add("Authorization", "Bearer " + key.BearerToken);
                 webRequest.Method = "GET";
                 webRequest.ContentType = "application/x-www-form-urlencoded;charset=UTF-8";
