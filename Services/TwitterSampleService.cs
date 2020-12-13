@@ -63,12 +63,10 @@ namespace TyHookCodingAssignment.Services
         {
             try
             {
-                // convert to dto and model
                 TwitterSampleClient.IncomingTweetEventArgs eventArgs = e as TwitterSampleClient.IncomingTweetEventArgs;
                 SampledStreamDTO resultsDTO = JsonConvert.DeserializeObject<SampledStreamDTO>(eventArgs.StreamDataResponse);
-                // SampledStreamModel model = _iMapper.Map<SampledStreamDTO, SampledStreamModel>(resultsDTO);
 
-                // raise event with Model
+                // raise event with dto
                 OnIncomingDataEvent(new IncomingDataEventArgs { StreamDataResponse = resultsDTO });
             }
             catch (Exception ex)
