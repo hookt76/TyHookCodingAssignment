@@ -136,12 +136,12 @@ namespace TwitterMetrics
                             this.UIThread(() => this.lblPerSecond.Text = GetAverageCount().TweetsPerSecond.ToString());
                             this.UIThread(() => this.lblPerMinute.Text = GetAverageCount().TweetsPerMinute.ToString());
                             this.UIThread(() => this.lblPerHour.Text = GetAverageCount().TweetsPerHour.ToString());
-                            this.UIThread(() => this.lblEmojiPrecent.Text = GetEmojiPrecentage() + "%");
-                            this.UIThread(() => this.lblPhotoPrecent.Text = GetPhotoPrecentage() + "%"); 
-                            this.UIThread(() => this.lblURLPrecent.Text = GetURLPrecentage() + "%"); 
-                            this.UIThread(() => this.lblTopDomain.Text = GetTopDomain());
-                            this.UIThread(() => this.lblTopEmoji.Text = GetTopEmoji());
-                            this.UIThread(() => this.lblTopHashTag.Text = GetTopHashTag() + "%");
+                            this.UIThread(() => this.lblEmojiPrecent.Text = GetPrecentageByCategory(emojisDict) + "%");
+                            this.UIThread(() => this.lblPhotoPrecent.Text = GetPrecentageByCategory(photoUrlDict) + "%"); 
+                            this.UIThread(() => this.lblURLPrecent.Text = GetPrecentageByCategory(urlsDict) + "%"); 
+                            this.UIThread(() => this.lblTopDomain.Text = GetTopItemByCategory(domainDict));
+                            this.UIThread(() => this.lblTopEmoji.Text = GetTopItemByCategory(emojisDict));
+                            this.UIThread(() => this.lblTopHashTag.Text = GetTopItemByCategory(hashTagsDict) + "%");
                         }
                         Thread.Sleep(1000);
                     };
@@ -276,44 +276,13 @@ namespace TwitterMetrics
         }
 
         /// <summary>
-        /// meant to use linq to find the top hashtag reporting on Domain, needed to figure out how to get the count
-        /// so i could have selected the hashTag with the max number of counts
-        /// </summary>
-        /// <returns></returns>
-        private string GetTopHashTag()
-        {
-            string result = " ";
-            if (hashTagsDict.Count() > 0)
-            {
-                result = hashTagsDict.Aggregate((x, y) => x.Value > y.Value ? x : y).Key;
-            }
-            return result;
-
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <returns></returns>
-        public string GetTopDomain()
-        {
-            string result = " ";
-            if (domainDict.Count() > 0)
-            {
-                result = domainDict.Aggregate((x, y) => x.Value > y.Value ? x : y).Key;
-            }
-            return result;
-        }
-
-
-        /// <summary>
         /// Get Top Emoji
         /// </summary>
         /// <returns></returns>
-        public string GetTopEmoji()
+        public string GetTopItemByCategory(ConcurrentDictionary<string, int> conDict)
         {
             string result = " ";
-            if (emojisDict.Count() > 0)
+            if (conDict.Count() > 0)
             {
                 result = emojisDict.Aggregate((x, y) => x.Value > y.Value ? x : y).Key;
             }
@@ -322,51 +291,15 @@ namespace TwitterMetrics
         }
 
         /// <summary>
-        /// calculates the precentage of photo url
+        /// calculates the precentage of dictionay
         /// </summary>
         /// <returns></returns>
-        private string GetPhotoPrecentage()
+        private string GetPrecentageByCategory(ConcurrentDictionary<string, int> conDict)
         {
             string result = "0";
                 if (metricsBag.Count() > 0)
                 {
-                    double precentage = (double)photoUrlDict.Count() / (double)metricsBag.Count();
-                    precentage = precentage * 100;
-                    result = precentage.ToString();
-                }
-
-            return result;
-        }
-
-        /// <summary>
-        /// calculates the precentage of wteets with emoji
-        /// </summary>
-        /// <returns></returns>
-        private string GetEmojiPrecentage()
-        {
-            string result = "0";
-
-                if (metricsBag.Count() > 0)
-                {
-                    double precentage = (double)emojisDict.Count() / (double)metricsBag.Count();
-                    precentage = precentage * 100;
-                    result = precentage.ToString();
-                }
-
-            return result;
-        }
-
-        /// <summary>
-        /// calculates the precentage of wteets with emoji
-        /// </summary>
-        /// <returns></returns>
-        private string GetURLPrecentage()
-        {
-            string result = "0";
-
-                if (metricsBag.Count() > 0)
-                {
-                    double precentage = (double)urlsDict.Count() / (double)metricsBag.Count();
+                    double precentage = (double)conDict.Count() / (double)metricsBag.Count();
                     precentage = precentage * 100;
                     result = precentage.ToString();
                 }
