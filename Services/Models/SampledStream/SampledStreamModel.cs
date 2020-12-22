@@ -7,18 +7,19 @@ namespace TyHookCodingAssignment.Services.SampledStream
     /// <summary>
     /// 
     /// </summary>
-    public class SampledStreamModel
+    public partial class SampledStreamModel
     {
         public Data data { get; set; }
+        public Includes includes { get; set; }
     }
 
-    public class ReferencedTweet
+    public partial class ReferencedTweet
     {
         public string type { get; set; }
         public string id { get; set; }
     }
 
-    public class Url
+    public partial class Url
     {
         public int start { get; set; }
         public int end { get; set; }
@@ -39,13 +40,13 @@ namespace TyHookCodingAssignment.Services.SampledStream
         public string normalized_text { get; set; }
     }
 
-    public class Entities
+    public partial class Entities
     {
         public List<Url> urls { get; set; }
         public List<Annotation> annotations { get; set; }
     }
 
-    public class Stats
+    public partial class Stats
     {
         public int retweet_count { get; set; }
         public int reply_count { get; set; }
@@ -53,7 +54,7 @@ namespace TyHookCodingAssignment.Services.SampledStream
         public int quote_count { get; set; }
     }
 
-    public class Domain
+    public partial class Domain
     {
         public string id { get; set; }
         public string name { get; set; }
@@ -67,13 +68,13 @@ namespace TyHookCodingAssignment.Services.SampledStream
         public string description { get; set; }
     }
 
-    public class ContextAnnotation
+    public partial class ContextAnnotation
     {
         public Domain domain { get; set; }
         public Entity entity { get; set; }
     }
 
-    public class Data
+    public partial class Data
     {
         public string id { get; set; }
         public DateTime created_at { get; set; }
@@ -88,5 +89,36 @@ namespace TyHookCodingAssignment.Services.SampledStream
         public string source { get; set; }
         public List<ContextAnnotation> context_annotations { get; set; }
         public string format { get; set; }
+    }
+
+    public partial class Includes
+    {
+        public List<Media> media { get; set; }
+
+        public List<User> users { get; set; }
+    }
+
+    public partial class Media
+    {
+        public Uri url { get; set; }
+
+        public long width { get; set; }
+
+        public string media_Key { get; set; }
+
+        public long height { get; set; }
+
+        public string type { get; set; }
+    }
+
+    public partial class User
+    {
+        public DateTimeOffset created_at { get; set; }
+
+        public string id { get; set; }
+
+        public string username { get; set; }
+
+        public string name { get; set; }
     }
 }

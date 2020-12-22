@@ -49,7 +49,7 @@ namespace TwitterMetrics
             _bagUrls.Add(urls);
             _bagPhotoUrl.Add(photoUrl);
             _bagEmojis.Add(emojis);
-            _bagEmojis.Add(domain);
+            _bagDomain.Add(domain);
 
         }
 
@@ -154,7 +154,7 @@ namespace TwitterMetrics
                             this.UIThread(() => this.lblPhotoPrecent.Text = GetPhotoPrecentage() + "%"); 
                             this.UIThread(() => this.lblURLPrecent.Text = GetURLPrecentage() + "%"); 
                             this.UIThread(() => this.lblTopDomain.Text = GetTopDomain());
-                            this.UIThread(() => this.lblTopEmoji.Text = ":(");
+                            this.UIThread(() => this.lblTopEmoji.Text = GetTopEmoji());
                             this.UIThread(() => this.lblTopHashTag.Text = GetTopHashTag() + "%");
                         }
                         Thread.Sleep(2000);
@@ -325,7 +325,7 @@ namespace TwitterMetrics
             {
                 TweetsPerSecond = totalCount / (_timer.ElapsedMilliseconds / 1000),
                 TweetsPerMinute = totalCount / (_timer.ElapsedMilliseconds / 1000) * 60,
-                TweetsPerHour = totalCount / (_timer.ElapsedMilliseconds / 1000) * 360
+                TweetsPerHour = totalCount / (_timer.ElapsedMilliseconds / 1000) * 3600
             };
 
             return averageTweet;
@@ -362,6 +362,24 @@ namespace TwitterMetrics
         {
             string result = "None to report";
             foreach (var item in _bagDomain)
+            {
+                if (item.Count() > 0)
+                {
+                    result = item.Aggregate((x, y) => x.Value > y.Value ? x : y).Key;
+                }
+            }
+            return result;
+        }
+
+
+        /// <summary>
+        /// Get Top Emoji
+        /// </summary>
+        /// <returns></returns>
+        public string GetTopEmoji()
+        {
+            string result = "None to report";
+            foreach (var item in _bagEmojis)
             {
                 if (item.Count() > 0)
                 {
