@@ -10,12 +10,12 @@ namespace TwitterSampleStreamTest
     public class UITest
     {
         /// <summary>
-        /// Test to insure data is being mapped to the correct dictionary in 
+        /// Test to insure calculations are correct
         /// addition to this i would create a test for 
-        /// each dictionary 
+        /// each dictionary with a negative test
         /// </summary>
         [TestMethod]
-        public void TestCollectDataForHashTag()
+        public void TestGetDataByDictionaryHashTag()
         {
             TwitterMetrics.Metric metric = new TwitterMetrics.Metric();
 
@@ -36,6 +36,179 @@ namespace TwitterSampleStreamTest
 
             int value = 0;
             if(metric.hashTagsDict.ContainsKey("#itworks"))
+            {
+                value = 1;
+            }
+            else
+            {
+                value = 0;
+            }
+
+            Assert.AreEqual(1, value);
+
+
+        }
+
+        [TestMethod]
+        public void TestGetDataByDictionaryEmojiPrecent()
+        {
+            TwitterMetrics.Metric metric = new TwitterMetrics.Metric();
+
+            metric.emojisDict = new ConcurrentDictionary<string, int>();
+
+            SampledStreamDTO dto = new SampledStreamDTO
+            {
+                data = new Data { entities = new Entities { hagtags = new List<Hashtag>() } }
+            };
+
+            metric.emojisDict[":)"] = 1;
+
+            metric.CollecteMetrics(dto);
+
+            int value = 0;
+            if (metric.GetPrecentageByCategory(metric.emojisDict) ==  "100")
+            {
+                value = 1;
+            }
+            else
+            {
+                value = 0;
+            }
+
+            Assert.AreEqual(1, value);
+
+
+        }
+        [TestMethod]
+        public void TestGetDataByDictionaryTopEmoji()
+        { 
+
+            TwitterMetrics.Metric metric = new TwitterMetrics.Metric();
+
+            metric.emojisDict = new ConcurrentDictionary<string, int>();
+
+            SampledStreamDTO dto = new SampledStreamDTO
+            {
+                data = new Data { entities = new Entities { hagtags = new List<Hashtag>() } }
+            };
+
+            metric.emojisDict[":)"] = 1;
+
+            metric.CollecteMetrics(dto);
+
+            int value = 0;
+            if (metric.GetTopItemByCategory(metric.emojisDict) == ":)")
+            {
+                value = 1;
+            }
+            else
+            {
+                value = 0;
+            }
+
+            Assert.AreEqual(1, value);
+
+
+        }
+        [TestMethod]
+        public void TestGetDataByDictionaryDomainPrecent()
+        {
+            TwitterMetrics.Metric metric = new TwitterMetrics.Metric();
+
+            metric.emojisDict = new ConcurrentDictionary<string, int>();
+
+            SampledStreamDTO dto = new SampledStreamDTO
+            {
+                data = new Data { entities = new Entities { hagtags = new List<Hashtag>() } }
+            };
+
+            metric.domainDict["Http://TyreeHook.com"] = 1;
+
+            metric.CollecteMetrics(dto);
+
+            int value = 0;
+            if (metric.GetPrecentageByCategory(metric.domainDict) == "100")
+            {
+                value = 1;
+            }
+            else
+            {
+                value = 0;
+            }
+
+            Assert.AreEqual(1, value);
+
+
+        }
+        [TestMethod]
+        public void TestGetDataByDictionaryTopDomain()
+        {
+
+            TwitterMetrics.Metric metric = new TwitterMetrics.Metric();
+
+            metric.domainDict = new ConcurrentDictionary<string, int>();
+
+            SampledStreamDTO dto = new SampledStreamDTO
+            {
+                data = new Data { entities = new Entities { hagtags = new List<Hashtag>() } }
+            };
+
+            metric.domainDict["Http://TyreeHook.com"] = 2;
+            metric.domainDict["Http://TyreeHooklessValue.com"] = 1;
+
+            metric.CollecteMetrics(dto);
+
+            int value = 0;
+            if (metric.GetTopItemByCategory(metric.domainDict) == "Http://TyreeHook.com")
+            {
+                value = 1;
+            }
+            else
+            {
+                value = 0;
+            }
+
+            Assert.AreEqual(1, value);
+
+
+        }
+        [TestMethod]
+        public void TestGetDataByDictionaryHashTagPrecent()
+        {
+            TwitterMetrics.Metric metric = new TwitterMetrics.Metric();
+
+            metric.emojisDict = new ConcurrentDictionary<string, int>();
+
+            metric.domainDict["Http://TyreeHook.com"] = 1;
+
+
+            int value = 0;
+            if (metric.GetPrecentageByCategory(metric.domainDict) == "100")
+            {
+                value = 1;
+            }
+            else
+            {
+                value = 0;
+            }
+
+            Assert.AreEqual(1, value);
+
+
+        }
+        [TestMethod]
+        public void TestGetDataByDictionaryTopHashTag()
+        {
+
+            TwitterMetrics.Metric metric = new TwitterMetrics.Metric();
+
+            metric.hashTagsDict = new ConcurrentDictionary<string, int>();
+
+            metric.hashTagsDict["#TyreeHook2"] = 2;
+            metric.hashTagsDict["#TyreeHook1"] = 1;
+
+            int value = 0;
+            if (metric.GetTopItemByCategory(metric.hashTagsDict) == "#TyreeHook2")
             {
                 value = 1;
             }

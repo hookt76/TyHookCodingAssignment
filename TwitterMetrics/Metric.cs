@@ -284,7 +284,7 @@ namespace TwitterMetrics
             string result = " ";
             if (conDict.Count() > 0)
             {
-                result = emojisDict.Aggregate((x, y) => x.Value > y.Value ? x : y).Key;
+                result = conDict.Aggregate((x, y) => x.Value > y.Value ? x : y).Key;
             }
             return result;
 
@@ -294,7 +294,7 @@ namespace TwitterMetrics
         /// calculates the precentage of dictionay
         /// </summary>
         /// <returns></returns>
-        private string GetPrecentageByCategory(ConcurrentDictionary<string, int> conDict)
+        public string GetPrecentageByCategory(ConcurrentDictionary<string, int> conDict)
         {
             string result = "0";
                 if (metricsBag.Count() > 0)
