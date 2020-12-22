@@ -17,20 +17,15 @@ namespace TwitterMetrics
 {
     public partial class Metric : Form
     {
-        private ConcurrentBag<Model.Metrics> metricsBag = new ConcurrentBag<Model.Metrics>();
+        private ConcurrentBag<string> metricsBag = new ConcurrentBag<string>();
         private Control _control = new Control();
         private int _twitterCount = 0;
         private bool _isStop = false;
-        public ConcurrentBag<Dictionary<string, int>> _bagHashTags = new ConcurrentBag<Dictionary<string, int>>();
-        public ConcurrentBag<Dictionary<string, int>> _bagUrls = new ConcurrentBag<Dictionary<string, int>>();
-        public ConcurrentBag<Dictionary<string, int>> _bagPhotoUrl = new ConcurrentBag<Dictionary<string, int>>();
-        public ConcurrentBag<Dictionary<string, int>> _bagEmojis = new ConcurrentBag<Dictionary<string, int>>();
-        public ConcurrentBag<Dictionary<string, int>> _bagDomain = new ConcurrentBag<Dictionary<string, int>>();
-        public Dictionary<string, int> hashTags = new Dictionary<string, int>();
-        public Dictionary<string, int> urls = new Dictionary<string, int>();
-        public Dictionary<string, int> photoUrl = new Dictionary<string, int>();
-        public Dictionary<string, int> emojis = new Dictionary<string, int>();
-        public Dictionary<string, int> domain = new Dictionary<string, int>();
+        public  ConcurrentDictionary<string, int> hashTagsDict = new ConcurrentDictionary<string, int>(StringComparer.OrdinalIgnoreCase);
+        public  ConcurrentDictionary<string, int> urlsDict = new ConcurrentDictionary<string, int>(StringComparer.OrdinalIgnoreCase);
+        public  ConcurrentDictionary<string, int> photoUrlDict = new ConcurrentDictionary<string, int>(StringComparer.OrdinalIgnoreCase);
+        public  ConcurrentDictionary<string, int> emojisDict = new ConcurrentDictionary<string, int>(StringComparer.OrdinalIgnoreCase);
+        public  ConcurrentDictionary<string, int> domainDict = new ConcurrentDictionary<string, int>(StringComparer.OrdinalIgnoreCase);
 
         Stopwatch _timer = new Stopwatch();
 
@@ -41,15 +36,6 @@ namespace TwitterMetrics
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            //initialize dictionaries and add them to their perspective
-            //the dictionaries are being added to the bag to allow concurrent use
-            //of the dictionaries
-
-            _bagHashTags.Add(hashTags);
-            _bagUrls.Add(urls);
-            _bagPhotoUrl.Add(photoUrl);
-            _bagEmojis.Add(emojis);
-            _bagDomain.Add(domain);
 
         }
 
@@ -157,7 +143,7 @@ namespace TwitterMetrics
                             this.UIThread(() => this.lblTopEmoji.Text = GetTopEmoji());
                             this.UIThread(() => this.lblTopHashTag.Text = GetTopHashTag() + "%");
                         }
-                        Thread.Sleep(2000);
+                        Thread.Sleep(1000);
                     };
 
                 });
@@ -183,112 +169,70 @@ namespace TwitterMetrics
             {
                 if (model != null)
                 {
-                    foreach (var item in _bagHashTags)
-                    {
+
                         if (model.data != null && model.data.entities != null && model.data.entities.hagtags != null)
                         {
                             foreach (var dictItem in model.data.entities.hagtags)
                             {
-                                if (item.ContainsKey(dictItem.tag))
-                                {
-                                    item[dictItem.tag]++;
-                                }
-                                else
-                                {
-                                    item.Add(dictItem.tag, 1);
-                                }
+
+                                hashTagsDict.AddOrUpdate(dictItem.tag, 1, (key, oldValue) => oldValue + 1);
                             }
                         }
-                    }
 
-                    foreach (var item in _bagUrls)
-                    {
+
                         if (model.data.entities != null && model.data.entities.urls != null)
                         {
                             foreach (var dictItem in model.data.entities.urls)
                             {
                                 if (dictItem.expanded_url != null)
                                 {
-                                    if (item.ContainsKey(dictItem.expanded_url))
-                                    {
-                                        item[dictItem.expanded_url]++;
-                                    }
-                                    else
-                                    {
-                                        item.Add(dictItem.expanded_url, 1);
-                                    }
+
+                                    urlsDict.AddOrUpdate(dictItem.expanded_url, 1, (key, oldValue) => oldValue + 1);
+
                                 }
                             }
                         }
-                    }
+                    
 
-                    foreach (var photo in _bagPhotoUrl)
-                    {
+
                         if (model.includes != null && model.includes.Media != null)
                         {
                             foreach (var item in model.includes.Media)
                             {
                                 if (item.url != null)
                                 {
-                                    if (photo.ContainsKey(item.url.AbsoluteUri))
-                                    {
-                                        photo[item.url.AbsoluteUri]++;
-                                    }
-                                    else
-                                    {
-                                        photo.Add(item.url.AbsoluteUri, 1);
-                                    }
+
+                                    photoUrlDict.AddOrUpdate(item.url.AbsoluteUri, 1, (key, oldValue) => oldValue +1);
+
                                 }
                             }
                         }
                         
-                    }
+                    
 
-                    foreach (var domain in _bagDomain) 
-                    {
                         if (model.data != null && model.data.entities != null && model.data.entities.urls != null && model.data.entities.urls.Count() > 0 )
                         {
                             foreach (var item in model.data.entities.urls)
                             {
                                 if (item.expanded_url != null)
                                 {
-                                    if (domain.ContainsKey(item.expanded_url))
-                                    {
-                                        domain[item.expanded_url]++;
-                                    }
-                                    else
-                                    {
-                                        domain.Add(item.expanded_url, 1);
-                                    }
+                                        domainDict.AddOrUpdate(item.expanded_url, 1, (key, oldValue) => oldValue +1);
+                                    
                                 }
                             }
                         }
 
                     }
 
-                    foreach (var emoji in _bagEmojis)
-                    {
-
                         if (model.data.text != null && Emoji.IsEmoji(model.data.text))
                         {
-                            if (emoji.ContainsKey(model.data.text))
-                            {
-                                emoji[model.data.text]++;
-                            }
-                            else
-                            {
-                                emoji.Add(model.data.text, 1);
-                            }
+                            emojisDict.AddOrUpdate(model.data.text, 1, (key, oldValue) => oldValue +1);
 
                         }
 
-                    }
 
-                    Model.Metrics metrics = new Model.Metrics();
-                    metrics.Domain = model.data.text;
-
-                    metricsBag.Add(metrics);
-                }
+                    metricsBag.Add(model.data.text);
+                
             }
             catch (Exception ex)
             {
@@ -338,18 +282,11 @@ namespace TwitterMetrics
         /// <returns></returns>
         private string GetTopHashTag()
         {
-            string result = string.Empty;
-            var topHashTag =
-                from tag in metricsBag
-                group tag by tag.HashTags into newGroup
-                orderby newGroup.Key
-                select newGroup.FirstOrDefault();
-
-            foreach (var item in topHashTag)
+            string result = " ";
+            if (hashTagsDict.Count() > 0)
             {
-                result = item.Domain;
+                result = hashTagsDict.Aggregate((x, y) => x.Value > y.Value ? x : y).Key;
             }
-
             return result;
 
         }
@@ -360,13 +297,10 @@ namespace TwitterMetrics
         /// <returns></returns>
         public string GetTopDomain()
         {
-            string result = "None to report";
-            foreach (var item in _bagDomain)
+            string result = " ";
+            if (domainDict.Count() > 0)
             {
-                if (item.Count() > 0)
-                {
-                    result = item.Aggregate((x, y) => x.Value > y.Value ? x : y).Key;
-                }
+                result = domainDict.Aggregate((x, y) => x.Value > y.Value ? x : y).Key;
             }
             return result;
         }
@@ -378,15 +312,13 @@ namespace TwitterMetrics
         /// <returns></returns>
         public string GetTopEmoji()
         {
-            string result = "None to report";
-            foreach (var item in _bagEmojis)
+            string result = " ";
+            if (emojisDict.Count() > 0)
             {
-                if (item.Count() > 0)
-                {
-                    result = item.Aggregate((x, y) => x.Value > y.Value ? x : y).Key;
-                }
+                result = emojisDict.Aggregate((x, y) => x.Value > y.Value ? x : y).Key;
             }
             return result;
+
         }
 
         /// <summary>
@@ -396,15 +328,13 @@ namespace TwitterMetrics
         private string GetPhotoPrecentage()
         {
             string result = "0";
-            foreach (var item in _bagPhotoUrl)
-            {
                 if (metricsBag.Count() > 0)
                 {
-                    double precentage = (double)item.Count() / (double)metricsBag.Count();
+                    double precentage = (double)photoUrlDict.Count() / (double)metricsBag.Count();
                     precentage = precentage * 100;
                     result = precentage.ToString();
                 }
-            }
+
             return result;
         }
 
@@ -415,15 +345,14 @@ namespace TwitterMetrics
         private string GetEmojiPrecentage()
         {
             string result = "0";
-            foreach (var item in _bagEmojis)
-            {
+
                 if (metricsBag.Count() > 0)
                 {
-                    double precentage = (double)item.Count() / (double)metricsBag.Count();
+                    double precentage = (double)emojisDict.Count() / (double)metricsBag.Count();
                     precentage = precentage * 100;
                     result = precentage.ToString();
                 }
-            }
+
             return result;
         }
 
@@ -434,15 +363,14 @@ namespace TwitterMetrics
         private string GetURLPrecentage()
         {
             string result = "0";
-            foreach (var item in _bagUrls)
-            {
+
                 if (metricsBag.Count() > 0)
                 {
-                    double precentage = (double)item.Count() / (double)metricsBag.Count();
+                    double precentage = (double)urlsDict.Count() / (double)metricsBag.Count();
                     precentage = precentage * 100;
                     result = precentage.ToString();
                 }
-            }
+
             return result;
         }
 

@@ -15,22 +15,16 @@ namespace TwitterSampleStreamTest
         /// each dictionary 
         /// </summary>
         [TestMethod]
-        public void TestCollectData()
+        public void TestCollectDataForHashTag()
         {
             TwitterMetrics.Metric metric = new TwitterMetrics.Metric();
 
-            metric._bagHashTags = new ConcurrentBag<Dictionary<string, int>>();
-            metric._bagUrls = new ConcurrentBag<Dictionary<string, int>>();
-            metric._bagPhotoUrl = new ConcurrentBag<Dictionary<string, int>>();
-            metric._bagEmojis = new ConcurrentBag<Dictionary<string, int>>();
-            metric._bagDomain = new ConcurrentBag<Dictionary<string, int>>();
-            metric.hashTags = new Dictionary<string, int>();
-            metric.urls = new Dictionary<string, int>();
-            metric.photoUrl = new Dictionary<string, int>();
-            metric.emojis = new Dictionary<string, int>();
-            metric.domain = new Dictionary<string, int>();
 
-            metric._bagHashTags.Add(metric.hashTags);
+            metric.hashTagsDict = new ConcurrentDictionary<string, int>() ;
+            metric.urlsDict = new ConcurrentDictionary<string, int>();
+            metric.photoUrlDict = new ConcurrentDictionary<string, int>();
+            metric.emojisDict = new ConcurrentDictionary<string, int>();
+            metric.domainDict = new ConcurrentDictionary<string, int>();
 
             SampledStreamDTO dto = new SampledStreamDTO
             {
@@ -41,9 +35,13 @@ namespace TwitterSampleStreamTest
             metric.CollecteMetrics(dto);
 
             int value = 0;
-            foreach (var item in metric._bagHashTags)
+            if(metric.hashTagsDict.ContainsKey("#itworks"))
             {
-                value = item["#itworks"];
+                value = 1;
+            }
+            else
+            {
+                value = 0;
             }
 
             Assert.AreEqual(1, value);
