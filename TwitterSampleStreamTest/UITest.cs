@@ -28,14 +28,16 @@ namespace TwitterSampleStreamTest
 
             SampledStreamDTO dto = new SampledStreamDTO
             {
-                data = new Data { entities = new Entities { hagtags = new List<Hashtag>() } }
+                data = new Data { entities = new Entities { hagtags = new List<Hashtag>() , urls = new List<Url>()}  }
             };
             
             dto.data.entities.hagtags.Add(new Hashtag { tag = "#itworks" });
+            dto.data.text = "DataText";
+            dto.data.entities.urls.Add(new Url { expanded_url = "http://tyreehook.com" });
             metric.CollecteMetrics(dto);
 
             int value = 0;
-            if(metric.hashTagsDict.ContainsKey("#itworks"))
+            if(metric.hashTagsDict.ContainsKey("#itworks") && metric.urlsDict.ContainsKey("http://tyreehook.com"))
             {
                 value = 1;
             }
@@ -44,7 +46,11 @@ namespace TwitterSampleStreamTest
                 value = 0;
             }
 
-            Assert.AreEqual(1, value);
+            string text = "";
+            bool result = metric.metricsBag.TryPeek(out text);
+
+            Assert.AreEqual(text, dto.data.text);
+            Assert.AreEqual(value,1);
 
 
         }
@@ -177,9 +183,17 @@ namespace TwitterSampleStreamTest
         {
             TwitterMetrics.Metric metric = new TwitterMetrics.Metric();
 
-            metric.emojisDict = new ConcurrentDictionary<string, int>();
+            metric.domainDict = new ConcurrentDictionary<string, int>();
 
-            metric.domainDict["Http://TyreeHook.com"] = 1;
+            SampledStreamDTO dto = new SampledStreamDTO
+            {
+                data = new Data { entities = new Entities { hagtags = new List<Hashtag>(), urls = new List<Url>() } }
+            };
+
+            dto.data.entities.hagtags.Add(new Hashtag { tag = "#itworks" });
+            dto.data.text = "DataText";
+            dto.data.entities.urls.Add(new Url { expanded_url = "http://tyreehook.com" });
+            metric.CollecteMetrics(dto);
 
 
             int value = 0;

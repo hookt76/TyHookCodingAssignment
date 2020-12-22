@@ -17,7 +17,7 @@ namespace TwitterMetrics
 {
     public partial class Metric : Form
     {
-        private ConcurrentBag<string> metricsBag = new ConcurrentBag<string>();
+        public ConcurrentBag<string> metricsBag = new ConcurrentBag<string>();
         private Control _control = new Control();
         private int _twitterCount = 0;
         private bool _isStop = false;
